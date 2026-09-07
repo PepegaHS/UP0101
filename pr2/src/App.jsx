@@ -17,8 +17,10 @@ function App() {
   const[theme, setTheme] = useState('light');
 
   const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  }
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(nextTheme);
+    document.documentElement.classList.toggle('dark', nextTheme === 'dark');
+  };
 
   const appStyle = {
     backgroundColor: theme === 'light' ? '#fff' : '#16171d',
@@ -35,7 +37,6 @@ function App() {
           <BrowserRouter>
           <Menu />
           
-
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />

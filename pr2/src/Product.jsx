@@ -13,7 +13,7 @@ function Product() {
     function handleAddToCart() {
         dispatch({ type: 'ADD_TO_CART', product });
         alert(`${product.name} (ID: ${id}) has been added to your cart!`);
-        navigate('/cart'); // Redirect to the cart page after adding the product
+        navigate('/cart');
     }
 
     return (
