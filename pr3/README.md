@@ -1,82 +1,16 @@
-# Beauty Salon React App
+# React + Vite
 
-Привет! Это учебный проект для работы с API салона красоты. Он построен на **React** и использует **Fetch API** для взаимодействия с сервером.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Структура проекта
+Currently, two official plugins are available:
 
-```
-src/
- ├─ api/                # функции для работы с API (GET, POST, PUT, DELETE)
- │    └─ appointments.js
- ├─ components/         # React-компоненты
- │    ├─ AppointmentsList.jsx   # список записей + добавление + редактирование + удаление
- │    └─ другие компоненты...
- ├─ App.jsx             # главный компонент приложения
- └─ main.jsx            # точка входа
-```
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-### Папка `api/`
+## React Compiler
 
-* **appointments.js** — здесь описаны все функции для работы с API записей:
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-  * `getAppointments()` — получить список
-  * `createAppointment(data)` — добавить новую запись
-  * `updateAppointment(id, data)` — редактировать запись
-  * `deleteAppointment(id)` — удалить запись
+## Expanding the ESLint configuration
 
-> **Что менять:**
-> Если у вас другой URL сервера, измените `API_URL` в `appointments.js`.
-
-### Папка `components/`
-
-* **AppointmentsList.jsx** — компонент, который отображает список записей, форму для добавления, редактирования и удаления.
-* Внутри компонента:
-
-  * Кнопка **Добавить** — отправляет форму на сервер
-  * Кнопка **Редактировать** — заполняет форму данными выбранной записи
-  * Кнопка **Удалить** — удаляет запись с подтверждением
-
-> **Что менять:**
->
-> * Поля формы, если на сервере есть новые свойства записи
-> * Стили под свои нужды
-> * API функции, если структура данных изменилась
-
-### App.jsx
-
-Главный компонент, где можно подключать разные страницы и компоненты.
-
-### main.jsx
-
-Точка входа приложения. Здесь происходит монтирование `<App />` в DOM.
-
-## Как запускать проект
-
-1. Установите зависимости:
-
-```bash
-npm install
-```
-
-2. Запустите приложение:
-
-```bash
-npm run dev
-```
-
-3. Перейдите в браузере на `http://localhost:5173/`
-
-## Советы для студентов
-
-* Начинайте с изменения `AppointmentsList.jsx`, чтобы работать с формой и списком записей.
-* API функции лежат в `api/appointments.js` — используйте их, не пишите `fetch` напрямую в компонентах.
-* Если хотите добавить новые сущности (например, `Users` или `Services`), создайте свои файлы API и компоненты по аналогии с `Appointments`.
-* Для редактирования и удаления используйте функции `updateAppointment` и `deleteAppointment`.
-
-> **Прямо меняйте эти строки для работы:**
->
-> * В `api/appointments.js` измените `API_URL` на адрес своего сервера.
-> * В форме `AppointmentsList.jsx` проверьте названия полей (`clientId`, `masterId`, `serviceId`, `appointmentTime`, `status`) и при необходимости добавьте новые.
-> * Кнопки редактирования и удаления используют функции из `api/appointments.js`, убедитесь, что они импортированы.
-## Удачи!
-
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
