@@ -1,0 +1,905 @@
+/* ==========================================================================
+   Standard Vite Style Layout & Components (Simple, Clean, No heavy effects)
+   ========================================================================== */
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-wrapper--admin {
+  flex-direction: row;
+}
+
+/* ==========================================================================
+   Client Navbar (Menu.jsx)
+   ========================================================================== */
+.main-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background-color: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
+
+.brand-logo {
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: #fff;
+  text-decoration: none;
+}
+
+.brand-logo:hover {
+  color: #646cff;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.nav-link {
+  color: #aaa;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: color 0.15s, background-color 0.15s;
+}
+
+.nav-link:hover {
+  color: #fff;
+  background-color: #2a2a2a;
+}
+
+.nav-link.active {
+  color: #fff;
+  background-color: #2f2f2f;
+  border: 1px solid #444;
+}
+
+.nav-link--admin {
+  color: #8c82ff;
+  border: 1px dashed #646cff;
+}
+
+.nav-badge {
+  display: inline-block;
+  background-color: #646cff;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  margin-left: 6px;
+}
+
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 0.85rem;
+}
+
+.user-name {
+  color: #eee;
+  font-weight: 500;
+}
+
+.user-discount-tag {
+  color: #4ade80;
+  font-size: 0.75rem;
+}
+
+.btn-logout {
+  background-color: transparent;
+  color: #ef4444;
+  border: 1px solid #ef4444;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+}
+
+.btn-logout:hover {
+  background-color: #ef4444;
+  color: #fff;
+}
+
+/* ==========================================================================
+   Admin Sidebar (AdminPanel.jsx)
+   ========================================================================== */
+.admin-panel {
+  width: 250px;
+  min-width: 250px;
+  min-height: 100vh;
+  background-color: #1a1a1a;
+  border-right: 1px solid #333;
+  padding: 20px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+.admin-panel__header {
+  padding-bottom: 12px;
+  border-bottom: 1px solid #333;
+}
+
+.admin-panel__header h2 {
+  margin: 0 0 6px 0;
+  font-size: 1.2rem;
+}
+
+.admin-badge {
+  display: inline-block;
+  background-color: #312e81;
+  color: #a5b4fc;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.admin-panel__section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-section-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #777;
+  margin: 8px 0 4px 6px;
+}
+
+.store-link {
+  background-color: #242424;
+  font-weight: 600;
+}
+
+.admin-panel__user {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.user-email-text {
+  font-size: 0.8rem;
+  color: #888;
+  word-break: break-all;
+}
+
+.admin-panel__logout {
+  color: #ef4444;
+  border: 1px solid #ef4444;
+  background: transparent;
+  width: 100%;
+  padding: 6px;
+}
+
+.admin-panel__logout:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+/* ==========================================================================
+   Content Area
+   ========================================================================== */
+.app-content {
+  flex: 1;
+  padding: 24px;
+  box-sizing: border-box;
+  max-width: 1300px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.app-content--admin {
+  max-width: none;
+  margin: 0;
+}
+
+/* ==========================================================================
+   Catalog & Aside Categories (Requirement 6)
+   ========================================================================== */
+.catalog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #333;
+}
+
+.catalog-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.personal-discount-banner {
+  background-color: #1e293b;
+  border: 1px solid #3b82f6;
+  color: #93c5fd;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.catalog-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+/* Aside category filter */
+.categories-aside {
+  width: 240px;
+  min-width: 240px;
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.categories-aside__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 8px;
+}
+
+.categories-aside__header h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.categories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.category-checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+  user-select: none;
+}
+
+.category-checkbox-item:hover {
+  background-color: #282828;
+}
+
+.category-checkbox-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.category-count {
+  color: #777;
+  font-size: 0.8rem;
+  margin-left: auto;
+}
+
+.catalog-main {
+  flex: 1;
+}
+
+.catalog-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 16px;
+}
+
+.filter-badge {
+  background-color: #333;
+  color: #ccc;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+/* Services Grid */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.service-card {
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: border-color 0.15s;
+}
+
+.service-card:hover {
+  border-color: #555;
+}
+
+.service-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.15rem;
+  color: #fff;
+}
+
+.service-card__categories {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.category-tag {
+  background-color: #2a2a2a;
+  color: #a5b4fc;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid #3a3a3a;
+}
+
+.service-card__desc {
+  font-size: 0.88rem;
+  color: #bbb;
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+  min-height: 38px;
+}
+
+.service-card__meta {
+  font-size: 0.82rem;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+.service-card__pricing {
+  margin-bottom: 14px;
+}
+
+.price-original {
+  text-decoration: line-through;
+  color: #777;
+  font-size: 0.9rem;
+  margin-right: 8px;
+}
+
+.price-final {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.discount-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.discount-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.discount-badge--service {
+  background-color: #831843;
+  color: #fbcfe8;
+  border: 1px solid #be185d;
+}
+
+.discount-badge--user {
+  background-color: #14532d;
+  color: #bbf7d0;
+  border: 1px solid #15803d;
+}
+
+.service-card__footer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 10px;
+  border-top: 1px solid #292929;
+}
+
+.btn-add-cart {
+  width: 100%;
+  background-color: #646cff;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  border-radius: 6px;
+}
+
+.btn-add-cart:hover:not(:disabled) {
+  background-color: #535bf2;
+}
+
+.cart-qty-indicator {
+  font-size: 0.8rem;
+  color: #4ade80;
+  text-align: center;
+}
+
+/* ==========================================================================
+   Cart Page (Requirement 2)
+   ========================================================================== */
+.cart-page h1 {
+  font-size: 1.8rem;
+  margin: 0 0 20px 0;
+}
+
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.cart-items-container {
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.cart-items-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #333;
+}
+
+.cart-items-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.cart-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cart-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #2c2c2c;
+  gap: 16px;
+}
+
+.cart-item-row:last-child {
+  border-bottom: none;
+}
+
+.cart-item-info h3 {
+  margin: 0 0 4px 0;
+  font-size: 1.05rem;
+}
+
+.cart-item-duration {
+  font-size: 0.8rem;
+  color: #888;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.cart-item-discount-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cart-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  padding: 2px 4px;
+  background-color: #181818;
+}
+
+.btn-qty {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #282828;
+  color: #fff;
+  border-radius: 4px;
+  border: 1px solid #333;
+}
+
+.btn-qty:hover {
+  background-color: #383838;
+}
+
+.qty-value {
+  min-width: 24px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.cart-item-subtotal {
+  min-width: 90px;
+  text-align: right;
+  font-size: 1.05rem;
+}
+
+.btn-delete {
+  background-color: transparent;
+  color: #ef4444;
+  border: 1px solid #451a1a;
+  padding: 4px 8px;
+  font-size: 0.8rem;
+}
+
+.btn-delete:hover {
+  background-color: #ef4444;
+  color: #fff;
+}
+
+/* Order Summary Box */
+.cart-summary-card {
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.cart-summary-card h2 {
+  margin: 0 0 16px 0;
+  font-size: 1.25rem;
+  border-bottom: 1px solid #333;
+  padding-bottom: 8px;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+  color: #bbb;
+}
+
+.summary-line--discount {
+  color: #60a5fa;
+}
+
+.summary-line--savings {
+  color: #4ade80;
+  font-weight: 500;
+}
+
+.cart-summary-card hr {
+  border: none;
+  border-top: 1px solid #333;
+  margin: 14px 0;
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.15rem;
+  margin-bottom: 18px;
+}
+
+.summary-total strong {
+  font-size: 1.4rem;
+  color: #fff;
+}
+
+.btn-checkout {
+  width: 100%;
+  background-color: #22c55e;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+.btn-checkout:hover:not(:disabled) {
+  background-color: #16a34a;
+}
+
+.empty-cart-state {
+  text-align: center;
+  padding: 40px;
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
+/* ==========================================================================
+   Login Form (Requirement 3)
+   ========================================================================== */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #181818;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background-color: #202020;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 28px;
+  box-sizing: border-box;
+}
+
+.login-card h2 {
+  margin: 0 0 20px 0;
+  text-align: center;
+  font-size: 1.4rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  color: #bbb;
+}
+
+.form-group input {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #3a3a3a;
+  background-color: #141414;
+  color: #fff;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.form-group input:focus {
+  border-color: #646cff;
+  outline: none;
+}
+
+.input-error {
+  border-color: #ef4444 !important;
+}
+
+.field-error-text {
+  color: #ef4444;
+  font-size: 0.78rem;
+}
+
+.test-accounts-hint {
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px solid #333;
+  font-size: 0.82rem;
+  color: #888;
+}
+
+.test-accounts-hint p {
+  margin: 0 0 8px 0;
+}
+
+/* ==========================================================================
+   Generic Alerts & States (Requirement 4)
+   ========================================================================== */
+.alert-error {
+  background-color: #451a1a;
+  border: 1px solid #ef4444;
+  color: #fca5a5;
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-bottom: 14px;
+  font-size: 0.9rem;
+}
+
+.alert-success {
+  background-color: #052e16;
+  border: 1px solid #22c55e;
+  color: #86efac;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 14px;
+  font-size: 0.9rem;
+}
+
+.loading-state,
+.error-state {
+  padding: 30px;
+  text-align: center;
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.error-state p {
+  color: #ef4444;
+  margin-bottom: 12px;
+}
+
+/* ==========================================================================
+   Buttons & Links
+   ========================================================================== */
+.btn-primary {
+  background-color: #646cff;
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  display: inline-block;
+  font-weight: 500;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #535bf2;
+}
+
+.btn-secondary {
+  background-color: #2a2a2a;
+  color: #ccc;
+  border: 1px solid #444;
+}
+
+.btn-secondary:hover {
+  background-color: #383838;
+  color: #fff;
+}
+
+.btn-sm {
+  padding: 4px 8px;
+  font-size: 0.78rem;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: #646cff;
+  padding: 0;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.btn-danger-text {
+  color: #ef4444;
+}
+
+/* ==========================================================================
+   Admin Tables & Forms
+   ========================================================================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 14px;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #2a2a2a;
+  font-size: 0.9rem;
+}
+
+th {
+  background-color: #222;
+  color: #aaa;
+  font-weight: 600;
+  border-bottom: 1px solid #333;
+}
+
+tr:hover td {
+  background-color: #202020;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="email"],
+input[type="date"],
+input[type="datetime-local"],
+select,
+textarea {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #3a3a3a;
+  background-color: #141414;
+  color: #fff;
+  font-size: 0.9rem;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+select {
+  cursor: pointer;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .catalog-layout {
+    flex-direction: column;
+  }
+  .categories-aside {
+    width: 100%;
+  }
+  .cart-layout {
+    grid-template-columns: 1fr;
+  }
+  .app-wrapper--admin {
+    flex-direction: column;
+  }
+  .admin-panel {
+    width: 100%;
+    min-height: auto;
+    border-right: none;
+    border-bottom: 1px solid #333;
+  }
+}
