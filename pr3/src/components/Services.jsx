@@ -267,7 +267,8 @@ export default function Services() {
                     <div className="service-card__body">
                       <h3>{service.title}</h3>
 
-                      {cats.length > 0 && (
+
+                      {cats.length > 0 ? (
                         <div className="service-card__categories">
                           {cats.map((c) => (
                             <span key={c.id_category} className="category-tag">
@@ -275,6 +276,8 @@ export default function Services() {
                             </span>
                           ))}
                         </div>
+                      ) : (
+                        <p className="service-card__categories-empty">Категории не указаны</p>
                       )}
 
                       <p className="service-card__desc">{service.description}</p>

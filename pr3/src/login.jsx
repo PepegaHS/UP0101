@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from './context/AuthContext';
 import { loginUser } from './api/users';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from './context/ThemeContext';
 
 function Login() {
@@ -49,11 +49,23 @@ function Login() {
       login(userData);
       navigate('/');
     } catch (err) {
-      setError(
-        err instanceof TypeError && err.message === 'Failed to fetch'
-          ? 'Не удалось подключиться к серверу.'
-          : err.message || 'Неверный email или пароль'
-      );
+      const message = err instanceof TypeError && err.message === 'Failed to fetch'
+        ? 'Не удалось подключиться к серверу.'
+        : err.message || 'Ошибка при входе';
+
+      if (err.code === 'USER_NOT_FOUND') {
+        setFieldErrors((prev) => ({ ...prev, email: 'Пользователь с таким email не найден' }));
+        setError('');
+        return;
+      }
+
+      if (err.code === 'INVALID_PASSWORD') {
+        setFieldErrors((prev) => ({ ...prev, password: 'Неверный пароль' }));
+        setError('');
+        return;
+      }
+
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -111,10 +123,14 @@ function Login() {
             {fieldErrors.password && <span className="field-error-text">{fieldErrors.password}</span>}
           </div>
 
-              <button type="submit" className="login-submit" disabled={loading}>
+          <button type="submit" className="login-submit" disabled={loading}>
             {loading ? 'Вход...' : 'Войти'}
           </button>
         </form>
+
+        <div style={{ marginTop: '12px', textAlign: 'center' }}>
+          <Link to="/register" className="btn-secondary btn-sm">Зарегистрироваться</Link>
+        </div>
 
         <div className="test-accounts-hint">
           <p>Быстрый вход для тестирования:</p>

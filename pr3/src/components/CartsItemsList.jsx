@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
 import { getCartsItems, createCartItems, updateCartItems } from '../api/carts_items';
+import { getCarts } from '../api/carts';
+import { getServices } from '../api/services';
 
 export default function CartsItemsList() {
   const [cartsItems, setCartsItems] = useState([]);
+  const [carts, setCarts] = useState([]);
+  const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -18,8 +22,14 @@ export default function CartsItemsList() {
   async function loadCartsItems() {
     try {
       setLoading(true);
-      const data = await getCartsItems();
-      setCartsItems(data);
+      const [itemsData, cartsData, servicesData] = await Promise.all([
+        getCartsItems(),
+        getCarts(),
+        getServices()
+      ]);
+      setCartsItems(itemsData);
+      setCarts(cartsData);
+      setServices(servicesData);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -91,25 +101,35 @@ export default function CartsItemsList() {
       {formError && <p style={{ color: 'red' }}>Ошибка: {formError}</p>}
       <form onSubmit={handleSubmit} style={{ marginBottom: '20px', display: 'flex', gap: '8px', flexWrap: 'wrap', maxWidth: '500px' }}>
 
-        <input
-          type="number"
+        <select
           name="cart_id"
-          placeholder="Cart ID"
           value={formData.cart_id}
           onChange={handleChange}
           required
           disabled={formData.isEditing}
-        />
+        >
+          <option value="">Выберите корзину</option>
+          {carts.map((cart) => (
+            <option key={cart.id_cart} value={cart.id_cart}>
+              {cart.user_name || `Пользователь #${cart.user_id}`}
+            </option>
+          ))}
+        </select>
 
-        <input
-          type="number"
+        <select
           name="service_id"
-          placeholder="Service ID"
           value={formData.service_id}
           onChange={handleChange}
           required
           disabled={formData.isEditing}
-        />
+        >
+          <option value="">Выберите услугу</option>
+          {services.map((service) => (
+            <option key={service.id_service} value={service.id_service}>
+              {service.title}
+            </option>
+          ))}
+        </select>
 
         <input
           type="number"
@@ -138,24 +158,32 @@ export default function CartsItemsList() {
         <table>
           <thead>
             <tr>
-              <th>Cart ID</th>
-              <th>Service ID</th>
+              <th>Пользователь</th>
+              <th>Услуга</th>
               <th>Количество</th>
               <th>Действия</th>
             </tr>
           </thead>
           <tbody>
-          {cartsItems.map(item => (
-            <tr key={`${item.cart_id}-${item.service_id}`}>
-              <td>{item.cart_id}</td>
-              <td>{item.service_id}</td>
-              <td>{item.quantity}</td>
-              <td>
-                <button onClick={() => handleEdit(item)}>Редактировать</button>
-                <button onClick={() => handleDelete(item.cart_id, item.service_id)} style={{ marginLeft: '10px', color: 'red' }}>Удалить</button>
-              </td>
-            </tr>
-          ))}
+          {cartsItems.map(item => {
+            const userFio = item.user_name || [item.user_second_name, item.user_first_name, item.user_middle_name]
+              .filter(Boolean)
+              .join(' ');
+
+            const serviceLabel = item.service_title || item.title || `Услуга #${item.service_id}`;
+
+            return (
+              <tr key={`${item.cart_id}-${item.service_id}`}>
+                <td>{userFio || `Пользователь #${item.cart_id}`}</td>
+                <td>{serviceLabel}</td>
+                <td>{item.quantity}</td>
+                <td>
+                  <button onClick={() => handleEdit(item)}>Редактировать</button>
+                  <button onClick={() => handleDelete(item.cart_id, item.service_id)} style={{ marginLeft: '10px', color: 'red' }}>Удалить</button>
+                </td>
+              </tr>
+            );
+          })}
           </tbody>
         </table>
       )}

@@ -1,11 +1,13 @@
 const API_URL = 'http://localhost:3001/api/carts';
 
 // Получить все записи
-export async function getСarts() {
+export async function getCarts() {
   const response = await fetch(API_URL);
   if (!response.ok) throw new Error('Ошибка при получении корзин');
   return await response.json();
 }
+
+export const getСarts = getCarts;
 
 // Получить запись по ID
 export async function getCartById(id) {

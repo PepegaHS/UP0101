@@ -15,6 +15,7 @@ import Cart from './components/Cart';
 import AdminPanel from './AdminPanel';
 import Menu from './Menu';
 import Login from './login';
+import Register from './register';
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
@@ -27,7 +28,11 @@ function App() {
   return (
     <BrowserRouter>
       {!user ? (
-        <Login />
+        <Routes>
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="*" element={<Login />} />
+        </Routes>
       ) : (
         <div className={isAdmin ? 'app-wrapper app-wrapper--admin' : 'app-wrapper app-wrapper--client'}>
           {isAdmin ? <AdminPanel /> : <Menu />}

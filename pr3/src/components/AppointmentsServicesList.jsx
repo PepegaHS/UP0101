@@ -1,9 +1,26 @@
 import { useState, useEffect } from 'react';
 import { getAppointmentsServices, createAppointmentServices, updateAppointmentServices, deleteAppointmentServices } from '../api/appointments_services';
+import { getAppointments } from '../api/appointments';
+import { getServices } from '../api/services';
 
+function formatDateTimeForDisplay(value) {
+  if (!value) return '-';
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+
+  return date.toLocaleString('ru-RU', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  }).replace(',', '');
+}
 
 export default function AppointmentsList() {
   const [appointments, setAppointments] = useState([]);
+  const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -19,8 +36,12 @@ export default function AppointmentsList() {
   async function loadAppointments() {
     try {
       setLoading(true);
-      const data = await getAppointmentsServices();
-      setAppointments(data);
+      const [appointmentsData, servicesData] = await Promise.all([
+        getAppointmentsServices(),
+        getServices()
+      ]);
+      setAppointments(appointmentsData);
+      setServices(servicesData);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -87,23 +108,35 @@ export default function AppointmentsList() {
       {formError && <p style={{ color: 'red' }}>Ошибка: {formError}</p>}
       <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
 
-        <input
-          type="number"
+        <select
           name="appointment_id"
-          placeholder="Appointment ID"
           value={formData.appointment_id}
           onChange={handleChange}
           required
-        />
+        >
+          <option value="">Выберите запись</option>
+          {appointments.map((appointment) => (
+            <option key={appointment.id_appointment} value={appointment.id_appointment}>
+              {appointment.client_second_name && appointment.client_first_name
+                ? `${appointment.client_second_name} ${appointment.client_first_name}`
+                : `Запись #${appointment.id_appointment}`} — {appointment.appointment_date}
+            </option>
+          ))}
+        </select>
 
-        <input
-          type="number"
+        <select
           name="service_id"
-          placeholder="Service ID"
           value={formData.service_id}
           onChange={handleChange}
           required
-        />
+        >
+          <option value="">Выберите услугу</option>
+          {services.map((service) => (
+            <option key={service.id_service} value={service.id_service}>
+              {service.title}
+            </option>
+          ))}
+        </select>
 
         <input
           type="number"
@@ -124,17 +157,19 @@ export default function AppointmentsList() {
         <table>
           <thead>
             <tr>
-              <th>Appointment ID</th>
-              <th>Service ID</th>
-              <th>Quantity</th>
+              <th>Клиент</th>
+              <th>Время записи</th>
+              <th>Услуга</th>
+              <th>Количество</th>
               <th>Действия</th>
             </tr>
           </thead>
           <tbody>
           {appointments.map(a => (
-            <tr key={a.appointment_id}>
-              <td>{a.appointment_id}</td>
-              <td>{a.service_id}</td>
+            <tr key={`${a.appointment_id}-${a.service_id}`}>
+              <td>{a.client_name || `Клиент #${a.user_id || a.appointment_id}`}</td>
+              <td>{formatDateTimeForDisplay(a.appointment_date)}</td>
+              <td>{a.service_title || `Услуга #${a.service_id}`}</td>
               <td>{a.quantity}</td>
               <td>
                 <button onClick={() => handleEdit(a)}>Редактировать</button>

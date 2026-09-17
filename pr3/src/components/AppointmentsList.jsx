@@ -1,9 +1,38 @@
 import { useState, useEffect } from 'react';
 import { getAppointments, createAppointment, updateAppointment, deleteAppointment } from '../api/appointments';
+import { getUsers } from '../api/users';
+import { getRoles } from '../api/roles';
 
+
+function formatDateTimeForInput(value) {
+  if (!value) return '';
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+
+  const pad = (num) => String(num).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function formatDateTimeForDisplay(value) {
+  if (!value) return '-';
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+
+  return date.toLocaleString('ru-RU', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  }).replace(',', '');
+}
 
 export default function AppointmentsList() {
   const [appointments, setAppointments] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -22,8 +51,14 @@ export default function AppointmentsList() {
   async function loadAppointments() {
     try {
       setLoading(true);
-      const data = await getAppointments();
-      setAppointments(data);
+      const [appointmentsData, usersData, rolesData] = await Promise.all([
+        getAppointments(),
+        getUsers(),
+        getRoles()
+      ]);
+      setAppointments(appointmentsData);
+      setUsers(usersData);
+      setRoles(rolesData);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -67,7 +102,10 @@ export default function AppointmentsList() {
 
   // ===== КОД ДЛЯ РЕДАКТИРОВАНИЯ =====
   function handleEdit(appointment) {
-    setFormData(appointment);
+    setFormData({
+      ...appointment,
+      appointment_date: formatDateTimeForInput(appointment.appointment_date)
+    });
   }
   // ==================================
 
@@ -95,6 +133,9 @@ export default function AppointmentsList() {
     }
   }
 
+  const masterRoleId = roles.find((role) => /мастер/i.test(role.title))?.id_role;
+  const masterUsers = users.filter((user) => String(user.role_id) === String(masterRoleId));
+
   if (loading) return <p>Загрузка...</p>;
   if (error) return <p>Ошибка: {error}</p>;
 
@@ -104,23 +145,37 @@ export default function AppointmentsList() {
       {formError && <p style={{ color: 'red' }}>Ошибка: {formError}</p>}
       <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
 
-        <input
-          type="number"
+        <select
           name="user_id"
-          placeholder="User ID"
           value={formData.user_id}
           onChange={handleChange}
           required
-        />
+        >
+          <option value="">Выберите клиента</option>
+          {users.map((user) => (
+            <option key={user.id_user} value={user.id_user}>
+              {user.second_name} {user.first_name} {user.middle_name || ''}
+            </option>
+          ))}
+        </select>
 
-        <input
-          type="number"
+        <select
           name="master_id"
-          placeholder="Master ID"
           value={formData.master_id}
           onChange={handleChange}
           required
-        />
+        >
+          <option value="">Выберите мастера</option>
+          {masterUsers.length === 0 ? (
+            <option value="" disabled>Нет пользователей с ролью "Мастер"</option>
+          ) : (
+            masterUsers.map((user) => (
+              <option key={user.id_user} value={user.id_user}>
+                {user.second_name} {user.first_name} {user.middle_name || ''}
+              </option>
+            ))
+          )}
+        </select>
 
         <input
           type="datetime-local"
@@ -159,8 +214,8 @@ export default function AppointmentsList() {
         <table>
           <thead>
             <tr>
-              <th>Client ID</th>
-              <th>Master ID</th>
+              <th>Клиент</th>
+              <th>Мастер</th>
               <th>Время</th>
               <th>Статус</th>
               <th>Действия</th>
@@ -169,9 +224,9 @@ export default function AppointmentsList() {
           <tbody>
           {appointments.map(a => (
             <tr key={a.id_appointment}>
-              <td>{a.user_id}</td>
-              <td>{a.master_id}</td>
-              <td>{a.appointment_date}</td>
+              <td>{a.client_second_name && a.client_first_name ? `${a.client_second_name} ${a.client_first_name}${a.client_middle_name ? ` ${a.client_middle_name}` : ''}` : `Клиент #${a.user_id}`}</td>
+              <td>{a.master_second_name && a.master_first_name ? `${a.master_second_name} ${a.master_first_name}${a.master_middle_name ? ` ${a.master_middle_name}` : ''}` : `Мастер #${a.master_id}`}</td>
+              <td>{formatDateTimeForDisplay(a.appointment_date)}</td>
               <td>
                 <button onClick={() => handleToggleCompleted(a)}>
                   {a.is_completed ? 'Завершён' : 'Не завершён'}

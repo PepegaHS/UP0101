@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { getСarts, createCart, updateCart, deleteCart } from '../api/carts';
+import { getUsers } from '../api/users';
 
 export default function CartsList() {
 	const [carts, setCarts] = useState([]);
+	const [users, setUsers] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 
@@ -16,8 +18,12 @@ export default function CartsList() {
 	async function loadCarts() {
 		try {
 			setLoading(true);
-			const data = await getСarts();
-			setCarts(data);
+			const [cartsData, usersData] = await Promise.all([
+				getСarts(),
+				getUsers()
+			]);
+			setCarts(cartsData);
+			setUsers(usersData);
 		} catch (err) {
 			setError(err.message);
 		} finally {
@@ -80,15 +86,20 @@ export default function CartsList() {
 			<h2>{formData.id_cart ? 'Редактировать корзину' : 'Добавить корзину'}</h2>
 			{formError && <p style={{ color: 'red' }}>Ошибка: {formError}</p>}
 			<form onSubmit={handleSubmit} style={{ marginBottom: '20px', display: 'flex', gap: '8px', maxWidth: '400px' }}>
-				<input
-					type="number"
+				<select
 					name="user_id"
-					placeholder="User ID"
 					value={formData.user_id}
 					onChange={handleChange}
 					required
 					style={{ flex: 1 }}
-				/>
+				>
+					<option value="">Выберите пользователя</option>
+					{users.map((user) => (
+						<option key={user.id_user} value={user.id_user}>
+							{user.second_name} {user.first_name} {user.middle_name || ''}
+						</option>
+					))}
+				</select>
 
 				<button type="submit">{formData.id_cart ? 'Обновить' : 'Добавить'}</button>
 				{formData.id_cart && (
@@ -105,20 +116,26 @@ export default function CartsList() {
 				<table>
 					<thead>
 						<tr>
-							<th>User ID</th>
+							<th>Пользователь</th>
 							<th>Действия</th>
 						</tr>
 					</thead>
 					<tbody>
-					{carts.map(cart => (
-						<tr key={cart.id_cart}>
-							<td>{cart.user_id}</td>
-							<td>
-								<button onClick={() => handleEdit(cart)}>Редактировать</button>
-								<button onClick={() => handleDelete(cart.id_cart)} style={{ marginLeft: '10px', color: 'red' }}>Удалить</button>
-							</td>
-						</tr>
-					))}
+					{carts.map(cart => {
+						const userFio = cart.user_name || [cart.user_second_name, cart.user_first_name, cart.user_middle_name]
+							.filter(Boolean)
+							.join(' ');
+
+						return (
+							<tr key={cart.id_cart}>
+								<td>{userFio || `Пользователь #${cart.user_id}`}</td>
+								<td>
+									<button onClick={() => handleEdit(cart)}>Редактировать</button>
+									<button onClick={() => handleDelete(cart.id_cart)} style={{ marginLeft: '10px', color: 'red' }}>Удалить</button>
+								</td>
+							</tr>
+						);
+					})}
 					</tbody>
 				</table>
 			)}

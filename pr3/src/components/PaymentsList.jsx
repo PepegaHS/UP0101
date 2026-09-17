@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { getPayments, createPayment, updatePayment, deletePayment } from '../api/payments';
+import { getAppointments } from '../api/appointments';
 
 export default function PaymentsList() {
 	const [payments, setPayments] = useState([]);
+	const [appointments, setAppointments] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 
@@ -18,8 +20,12 @@ export default function PaymentsList() {
 	async function loadPayments() {
 		try {
 			setLoading(true);
-			const data = await getPayments();
-			setPayments(data);
+			const [paymentsData, appointmentsData] = await Promise.all([
+				getPayments(),
+				getAppointments()
+			]);
+			setPayments(paymentsData);
+			setAppointments(appointmentsData);
 		} catch (err) {
 			setError(err.message);
 		} finally {
@@ -87,14 +93,21 @@ export default function PaymentsList() {
 			{formError && <p style={{ color: 'red' }}>Ошибка: {formError}</p>}
 			<form onSubmit={handleSubmit} style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '400px' }}>
 
-				<input
-					type="number"
+				<select
 					name="appointment_id"
-					placeholder="Appointment ID"
 					value={formData.appointment_id}
 					onChange={handleChange}
 					required
-				/>
+				>
+					<option value="">Выберите запись</option>
+					{appointments.map((appointment) => (
+						<option key={appointment.id_appointment} value={appointment.id_appointment}>
+							{appointment.client_second_name && appointment.client_first_name
+								? `${appointment.client_second_name} ${appointment.client_first_name}`
+								: `Запись #${appointment.id_appointment}`} — {appointment.appointment_date}
+						</option>
+					))}
+				</select>
 
 				<input
 					type="date"
@@ -133,7 +146,7 @@ export default function PaymentsList() {
 				<table>
 					<thead>
 						<tr>
-							<th>Appointment ID</th>
+							<th>Клиент</th>
 							<th>Дата платежа</th>
 							<th>Сумма</th>
 							<th>Действия</th>
@@ -142,7 +155,7 @@ export default function PaymentsList() {
 					<tbody>
 					{payments.map(payment => (
 						<tr key={payment.id_payment}>
-							<td>{payment.appointment_id}</td>
+							<td>{payment.client_name || `Клиент #${payment.appointment_id}`}</td>
 							<td>{payment.payment_date ? new Date(payment.payment_date).toLocaleDateString() : '-'}</td>
 							<td>{parseFloat(payment.total).toLocaleString()} ₽</td>
 							<td>

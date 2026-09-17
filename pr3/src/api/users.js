@@ -22,8 +22,14 @@ export async function createUser(user) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(user),
   });
-  if (!response.ok) throw new Error('Ошибка при создании пользователя');
-  return await response.json();
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(data.error || 'Ошибка при создании пользователя');
+  }
+
+  return data;
 }
 
 // Обновить запись
@@ -53,6 +59,14 @@ export async function loginUser(email, password) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   });
-  if (!response.ok) throw new Error('Ошибка при входе пользователя');
-  return await response.json();
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const error = new Error(data.error || 'Ошибка при входе пользователя');
+    error.code = data.code;
+    throw error;
+  }
+
+  return data;
 }

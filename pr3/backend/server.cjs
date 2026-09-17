@@ -101,6 +101,8 @@ app.put('/api/roles/:id', async (req, res) => {
 
 app.delete('/api/roles/:id', async (req, res) => {
   try {
+    await pool.query('UPDATE users SET role_id = 2 WHERE role_id = $1', [req.params.id]);
+
     const result = await pool.query('DELETE FROM roles WHERE id_role = $1', [req.params.id]);
     if (result.rowCount === 0) return res.status(404).json({ error: 'Роль не найдена' });
     res.status(204).end();
@@ -165,6 +167,9 @@ app.put('/api/discounts/:id', async (req, res) => {
 
 app.delete('/api/discounts/:id', async (req, res) => {
   try {
+    await pool.query('UPDATE users SET discount_id = 1 WHERE discount_id = $1', [req.params.id]);
+    await pool.query('UPDATE services SET discount_id = 1 WHERE discount_id = $1', [req.params.id]);
+
     const result = await pool.query('DELETE FROM discounts WHERE id_discount = $1', [req.params.id]);
     if (result.rowCount === 0) return res.status(404).json({ error: 'Скидка не найдена' });
     res.status(204).end();
@@ -202,20 +207,32 @@ app.post('/api/users/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const result = await pool.query(
+    const userResult = await pool.query(
       `SELECT u.*, r.title as role_title, d.title as discount_title, d.percentage as discount_percentage
        FROM users u
        LEFT JOIN roles r ON u.role_id = r.id_role
        LEFT JOIN discounts d ON u.discount_id = d.id_discount
-       WHERE LOWER(u.email) = LOWER($1) AND u.password = $2`,
-      [email ? email.trim() : '', password]
+       WHERE LOWER(u.email) = LOWER($1)`,
+      [email ? email.trim() : '']
     );
 
-    if (result.rowCount === 0) {
-      return res.status(401).json({ error: 'Неверный email или пароль' });
+    if (userResult.rowCount === 0) {
+      return res.status(404).json({
+        code: 'USER_NOT_FOUND',
+        error: 'Пользователь с таким email не найден',
+      });
     }
 
-    res.json(result.rows[0]);
+    const user = userResult.rows[0];
+
+    if (user.password !== password) {
+      return res.status(401).json({
+        code: 'INVALID_PASSWORD',
+        error: 'Неверный пароль',
+      });
+    }
+
+    res.json(user);
   } catch (err) {
     if (err instanceof TypeError) {
       console.error('Ошибка логина пользователя (TypeError):', err);
@@ -263,6 +280,35 @@ app.put('/api/users/:id', async (req, res) => {
 
 app.delete('/api/users/:id', async (req, res) => {
   try {
+    await pool.query(
+      `DELETE FROM carts_items
+       WHERE cart_id IN (SELECT id_cart FROM carts WHERE user_id = $1)`,
+      [req.params.id]
+    );
+
+    await pool.query('DELETE FROM carts WHERE user_id = $1', [req.params.id]);
+
+    await pool.query(
+      `DELETE FROM appointments_services
+       WHERE appointment_id IN (
+         SELECT id_appointment FROM appointments WHERE user_id = $1 OR master_id = $1
+       )`,
+      [req.params.id]
+    );
+
+    await pool.query(
+      `DELETE FROM payments
+       WHERE appointment_id IN (
+         SELECT id_appointment FROM appointments WHERE user_id = $1 OR master_id = $1
+       )`,
+      [req.params.id]
+    );
+
+    await pool.query(
+      'DELETE FROM appointments WHERE user_id = $1 OR master_id = $1',
+      [req.params.id]
+    );
+
     const result = await pool.query('DELETE FROM users WHERE id_user = $1', [req.params.id]);
     if (result.rowCount === 0) return res.status(404).json({ error: 'Пользователь не найден' });
     res.status(204).end();
@@ -413,7 +459,15 @@ app.delete('/api/services/:id', async (req, res) => {
 // ==========================================
 app.get('/api/services_categories', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM services_categories');
+    const result = await pool.query(`
+      SELECT sc.*,
+             s.title AS service_title,
+             c.title AS category_title
+      FROM services_categories sc
+      LEFT JOIN services s ON sc.service_id = s.id_service
+      LEFT JOIN categories c ON sc.category_id = c.id_category
+      ORDER BY s.title ASC, c.title ASC
+    `);
     res.json(result.rows);
   } catch (err) {
     console.error('Error getting services_categories:', err);
@@ -552,9 +606,17 @@ app.delete('/api/appointments/:id', async (req, res) => {
 app.get('/api/appointments_services', async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT aps.*, s.title as service_title, s.price
+      SELECT aps.*,
+             s.title AS service_title,
+             s.price,
+             a.appointment_date,
+             u.second_name || ' ' || u.first_name || COALESCE(' ' || u.middle_name, '') AS client_name,
+             m.second_name || ' ' || m.first_name || COALESCE(' ' || m.middle_name, '') AS master_name
       FROM appointments_services aps
       LEFT JOIN services s ON aps.service_id = s.id_service
+      LEFT JOIN appointments a ON aps.appointment_id = a.id_appointment
+      LEFT JOIN users u ON a.user_id = u.id_user
+      LEFT JOIN users m ON a.master_id = m.id_user
       ORDER BY aps.appointment_id DESC
     `);
     res.json(result.rows);
@@ -631,7 +693,16 @@ app.delete('/api/appointments_services/:id', async (req, res) => {
 // ==========================================
 app.get('/api/carts', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM carts ORDER BY id_cart ASC');
+    const result = await pool.query(`
+      SELECT c.*,
+             u.second_name AS user_second_name,
+             u.first_name AS user_first_name,
+             u.middle_name AS user_middle_name,
+             u.second_name || ' ' || u.first_name || COALESCE(' ' || u.middle_name, '') AS user_name
+      FROM carts c
+      LEFT JOIN users u ON c.user_id = u.id_user
+      ORDER BY c.id_cart ASC
+    `);
     res.json(result.rows);
   } catch (err) {
     console.error('Error getting carts:', err);
@@ -743,7 +814,19 @@ app.delete('/api/carts/:id', async (req, res) => {
 // ==========================================
 app.get('/api/carts_items', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM carts_items ORDER BY cart_id ASC, service_id ASC');
+    const result = await pool.query(`
+      SELECT ci.*,
+             s.title AS service_title,
+             u.second_name AS user_second_name,
+             u.first_name AS user_first_name,
+             u.middle_name AS user_middle_name,
+             u.second_name || ' ' || u.first_name || COALESCE(' ' || u.middle_name, '') AS user_name
+      FROM carts_items ci
+      LEFT JOIN services s ON ci.service_id = s.id_service
+      LEFT JOIN carts c ON ci.cart_id = c.id_cart
+      LEFT JOIN users u ON c.user_id = u.id_user
+      ORDER BY ci.cart_id ASC, ci.service_id ASC
+    `);
     res.json(result.rows);
   } catch (err) {
     console.error('Error getting carts_items:', err);
@@ -840,7 +923,15 @@ app.delete('/api/carts_items/:id', async (req, res) => {
 // ==========================================
 app.get('/api/payments', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM payments ORDER BY id_payment DESC');
+    const result = await pool.query(`
+      SELECT p.*,
+             a.appointment_date,
+             u.second_name || ' ' || u.first_name || COALESCE(' ' || u.middle_name, '') AS client_name
+      FROM payments p
+      LEFT JOIN appointments a ON p.appointment_id = a.id_appointment
+      LEFT JOIN users u ON a.user_id = u.id_user
+      ORDER BY p.id_payment DESC
+    `);
     res.json(result.rows);
   } catch (err) {
     console.error('Error getting payments:', err);
