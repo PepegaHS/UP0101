@@ -1,6 +1,46 @@
-/* ==========================================================================
-   Standard Vite Style Layout & Components (Simple, Clean, No heavy effects)
-   ========================================================================== */
+
+
+:root {
+  --page-bg: #f4f6f8;
+  --surface: #ffffff;
+  --surface-muted: #eef1f4;
+  --text: #202124;
+  --text-muted: #667085;
+  --border: #d7dce2;
+  --nav-bg: #ffffff;
+  --nav-text: #4b5563;
+  --nav-hover: #eef2f7;
+}
+
+:root[data-theme='dark'] {
+  --page-bg: #18181b;
+  --surface: #242424;
+  --surface-muted: #2f2f2f;
+  --text: #f4f4f5;
+  --text-muted: #a1a1aa;
+  --border: #3f3f46;
+  --nav-bg: #1a1a1a;
+  --nav-text: #aaa;
+  --nav-hover: #2a2a2a;
+}
+
+body {
+  background-color: var(--page-bg);
+  color: var(--text);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+button {
+  background-color: var(--surface-muted);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.app-wrapper,
+.app-content {
+  background-color: var(--page-bg);
+  color: var(--text);
+}
 
 #root {
   min-height: 100vh;
@@ -18,16 +58,14 @@
   flex-direction: row;
 }
 
-/* ==========================================================================
-   Client Navbar (Menu.jsx)
-   ========================================================================== */
+/* Client Navbar (Menu.jsx) */
 .main-navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 24px;
-  background-color: #1a1a1a;
-  border-bottom: 1px solid #333;
+  background-color: var(--nav-bg);
+  border-bottom: 1px solid var(--border);
 }
 
 .brand-logo {
@@ -48,7 +86,7 @@
 }
 
 .nav-link {
-  color: #aaa;
+  color: var(--nav-text);
   text-decoration: none;
   font-weight: 500;
   padding: 6px 12px;
@@ -57,14 +95,14 @@
 }
 
 .nav-link:hover {
-  color: #fff;
-  background-color: #2a2a2a;
+  color: var(--text);
+  background-color: var(--nav-hover);
 }
 
 .nav-link.active {
-  color: #fff;
-  background-color: #2f2f2f;
-  border: 1px solid #444;
+  color: var(--text);
+  background-color: var(--surface-muted);
+  border: 1px solid var(--border);
 }
 
 .nav-link--admin {
@@ -89,6 +127,19 @@
   gap: 14px;
 }
 
+.theme-toggle {
+  background-color: var(--surface-muted);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 5px 9px;
+  font-size: 0.8rem;
+}
+
+.theme-toggle:hover,
+.login-theme-toggle:hover {
+  border-color: #646cff;
+}
+
 .user-details {
   display: flex;
   flex-direction: column;
@@ -97,7 +148,7 @@
 }
 
 .user-name {
-  color: #eee;
+  color: var(--text);
   font-weight: 500;
 }
 
@@ -119,15 +170,13 @@
   color: #fff;
 }
 
-/* ==========================================================================
-   Admin Sidebar (AdminPanel.jsx)
-   ========================================================================== */
+/* Admin Sidebar (AdminPanel.jsx)*/
 .admin-panel {
   width: 250px;
   min-width: 250px;
   min-height: 100vh;
-  background-color: #1a1a1a;
-  border-right: 1px solid #333;
+  background-color: var(--nav-bg);
+  border-right: 1px solid var(--border);
   padding: 20px 14px;
   display: flex;
   flex-direction: column;
@@ -137,7 +186,7 @@
 
 .admin-panel__header {
   padding-bottom: 12px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border);
 }
 
 .admin-panel__header h2 {
@@ -164,19 +213,19 @@
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #777;
+  color: var(--text-muted);
   margin: 8px 0 4px 6px;
 }
 
 .store-link {
-  background-color: #242424;
+  background-color: var(--surface-muted);
   font-weight: 600;
 }
 
 .admin-panel__user {
   margin-top: auto;
   padding-top: 14px;
-  border-top: 1px solid #333;
+  border-top: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -201,9 +250,7 @@
   color: #fff;
 }
 
-/* ==========================================================================
-   Content Area
-   ========================================================================== */
+/* Content Area */
 .app-content {
   flex: 1;
   padding: 24px;
@@ -218,9 +265,7 @@
   margin: 0;
 }
 
-/* ==========================================================================
-   Catalog & Aside Categories (Requirement 6)
-   ========================================================================== */
+/* Catalog, aside menu */
 .catalog-header {
   display: flex;
   justify-content: space-between;
@@ -229,7 +274,7 @@
   gap: 12px;
   margin-bottom: 18px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border);
 }
 
 .catalog-header h1 {
@@ -256,8 +301,8 @@
 .categories-aside {
   width: 240px;
   min-width: 240px;
-  background-color: #1e1e1e;
-  border: 1px solid #333;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 16px;
   box-sizing: border-box;
@@ -268,7 +313,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border);
   padding-bottom: 8px;
 }
 
@@ -295,7 +340,7 @@
 }
 
 .category-checkbox-item:hover {
-  background-color: #282828;
+  background-color: var(--surface-muted);
 }
 
 .category-checkbox-item input[type="checkbox"] {
@@ -305,7 +350,7 @@
 }
 
 .category-count {
-  color: #777;
+  color: var(--text-muted);
   font-size: 0.8rem;
   margin-left: auto;
 }
@@ -319,13 +364,13 @@
   align-items: center;
   gap: 12px;
   font-size: 0.9rem;
-  color: #888;
+  color: var(--text-muted);
   margin-bottom: 16px;
 }
 
 .filter-badge {
-  background-color: #333;
-  color: #ccc;
+  background-color: var(--surface-muted);
+  color: var(--text-muted);
   padding: 2px 8px;
   border-radius: 4px;
   font-size: 0.8rem;
@@ -338,9 +383,26 @@
   gap: 16px;
 }
 
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.pagination__button {
+  min-width: 88px;
+}
+
+.pagination__status {
+  min-width: 140px;
+  text-align: center;
+}
+
 .service-card {
-  background-color: #1e1e1e;
-  border: 1px solid #333;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 16px;
   display: flex;
@@ -350,13 +412,13 @@
 }
 
 .service-card:hover {
-  border-color: #555;
+  border-color: #646cff;
 }
 
 .service-card h3 {
   margin: 0 0 8px 0;
   font-size: 1.15rem;
-  color: #fff;
+  color: var(--text);
 }
 
 .service-card__categories {
@@ -367,17 +429,17 @@
 }
 
 .category-tag {
-  background-color: #2a2a2a;
+  background-color: var(--surface-muted);
   color: #a5b4fc;
   font-size: 0.75rem;
   padding: 2px 6px;
   border-radius: 4px;
-  border: 1px solid #3a3a3a;
+  border: 1px solid var(--border);
 }
 
 .service-card__desc {
   font-size: 0.88rem;
-  color: #bbb;
+  color: var(--text-muted);
   margin: 0 0 12px 0;
   line-height: 1.4;
   min-height: 38px;
@@ -385,7 +447,7 @@
 
 .service-card__meta {
   font-size: 0.82rem;
-  color: #888;
+  color: var(--text-muted);
   margin-bottom: 12px;
 }
 
@@ -395,7 +457,7 @@
 
 .price-original {
   text-decoration: line-through;
-  color: #777;
+  color: var(--text-muted);
   font-size: 0.9rem;
   margin-right: 8px;
 }
@@ -403,7 +465,7 @@
 .price-final {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
 }
 
 .discount-badges {
@@ -437,7 +499,7 @@
   flex-direction: column;
   gap: 6px;
   padding-top: 10px;
-  border-top: 1px solid #292929;
+  border-top: 1px solid var(--border);
 }
 
 .btn-add-cart {
@@ -460,9 +522,7 @@
   text-align: center;
 }
 
-/* ==========================================================================
-   Cart Page (Requirement 2)
-   ========================================================================== */
+
 .cart-page h1 {
   font-size: 1.8rem;
   margin: 0 0 20px 0;
@@ -476,8 +536,8 @@
 }
 
 .cart-items-container {
-  background-color: #1e1e1e;
-  border: 1px solid #333;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 18px;
 }
@@ -488,7 +548,7 @@
   align-items: center;
   margin-bottom: 16px;
   padding-bottom: 10px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border);
 }
 
 .cart-items-header h2 {
@@ -507,7 +567,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 0;
-  border-bottom: 1px solid #2c2c2c;
+  border-bottom: 1px solid var(--border);
   gap: 16px;
 }
 
@@ -522,7 +582,7 @@
 
 .cart-item-duration {
   font-size: 0.8rem;
-  color: #888;
+  color: var(--text-muted);
   display: block;
   margin-bottom: 6px;
 }
@@ -544,10 +604,10 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid #3a3a3a;
+  border: 1px solid var(--border);
   border-radius: 6px;
   padding: 2px 4px;
-  background-color: #181818;
+  background-color: var(--surface-muted);
 }
 
 .btn-qty {
@@ -557,14 +617,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #282828;
-  color: #fff;
+  background-color: var(--surface);
+  color: var(--text);
   border-radius: 4px;
-  border: 1px solid #333;
+  border: 1px solid var(--border);
 }
 
 .btn-qty:hover {
-  background-color: #383838;
+  background-color: var(--nav-hover);
 }
 
 .qty-value {
@@ -594,8 +654,8 @@
 
 /* Order Summary Box */
 .cart-summary-card {
-  background-color: #1e1e1e;
-  border: 1px solid #333;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 20px;
 }
@@ -603,7 +663,7 @@
 .cart-summary-card h2 {
   margin: 0 0 16px 0;
   font-size: 1.25rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border);
   padding-bottom: 8px;
 }
 
@@ -612,7 +672,7 @@
   justify-content: space-between;
   font-size: 0.95rem;
   margin-bottom: 10px;
-  color: #bbb;
+  color: var(--text-muted);
 }
 
 .summary-line--discount {
@@ -626,7 +686,7 @@
 
 .cart-summary-card hr {
   border: none;
-  border-top: 1px solid #333;
+  border-top: 1px solid var(--border);
   margin: 14px 0;
 }
 
@@ -640,7 +700,7 @@
 
 .summary-total strong {
   font-size: 1.4rem;
-  color: #fff;
+  color: var(--text);
 }
 
 .btn-checkout {
@@ -661,28 +721,27 @@
 .empty-cart-state {
   text-align: center;
   padding: 40px;
-  background-color: #1e1e1e;
-  border: 1px solid #333;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
 }
 
-/* ==========================================================================
-   Login Form (Requirement 3)
-   ========================================================================== */
+/*  Login  */
 .login-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background-color: #181818;
+  background-color: var(--page-bg);
+  position: relative;
 }
 
 .login-card {
   width: 100%;
   max-width: 400px;
-  background-color: #202020;
-  border: 1px solid #333;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 28px;
   box-sizing: border-box;
@@ -694,6 +753,33 @@
   font-size: 1.4rem;
 }
 
+.login-theme-toggle {
+  display: block;
+  margin: 0 0 16px auto;
+  background-color: var(--surface-muted);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  font-size: 0.8rem;
+}
+
+.login-submit {
+  width: 100%;
+  margin-top: 10px;
+  background-color: #4f46e5;
+  color: #fff;
+  border: 1px solid #4338ca;
+}
+
+.login-submit:hover:not(:disabled) {
+  background-color: #4338ca;
+}
+
+.login-submit:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;
@@ -703,15 +789,15 @@
 
 .form-group label {
   font-size: 0.85rem;
-  color: #bbb;
+  color: var(--text-muted);
 }
 
 .form-group input {
   padding: 8px 12px;
   border-radius: 6px;
-  border: 1px solid #3a3a3a;
-  background-color: #141414;
-  color: #fff;
+  border: 1px solid var(--border);
+  background-color: var(--surface-muted);
+  color: var(--text);
   font-size: 0.95rem;
   box-sizing: border-box;
   width: 100%;
@@ -734,18 +820,16 @@
 .test-accounts-hint {
   margin-top: 22px;
   padding-top: 14px;
-  border-top: 1px solid #333;
+  border-top: 1px solid var(--border);
   font-size: 0.82rem;
-  color: #888;
+  color: var(--text-muted);
 }
 
 .test-accounts-hint p {
   margin: 0 0 8px 0;
 }
 
-/* ==========================================================================
-   Generic Alerts & States (Requirement 4)
-   ========================================================================== */
+
 .alert-error {
   background-color: #451a1a;
   border: 1px solid #ef4444;
@@ -770,8 +854,8 @@
 .error-state {
   padding: 30px;
   text-align: center;
-  background-color: #1e1e1e;
-  border: 1px solid #333;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   margin: 20px 0;
 }
@@ -781,9 +865,7 @@
   margin-bottom: 12px;
 }
 
-/* ==========================================================================
-   Buttons & Links
-   ========================================================================== */
+/* Buttons, links  */
 .btn-primary {
   background-color: #646cff;
   color: #fff;
@@ -800,14 +882,14 @@
 }
 
 .btn-secondary {
-  background-color: #2a2a2a;
-  color: #ccc;
-  border: 1px solid #444;
+  background-color: var(--surface-muted);
+  color: var(--text);
+  border: 1px solid var(--border);
 }
 
 .btn-secondary:hover {
-  background-color: #383838;
-  color: #fff;
+  background-color: var(--nav-hover);
+  color: var(--text);
 }
 
 .btn-sm {
@@ -829,15 +911,13 @@
   color: #ef4444;
 }
 
-/* ==========================================================================
-   Admin Tables & Forms
-   ========================================================================== */
+/* Admin panel */
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 14px;
-  background-color: #1a1a1a;
-  border: 1px solid #333;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -845,19 +925,19 @@ table {
 th, td {
   padding: 10px 12px;
   text-align: left;
-  border-bottom: 1px solid #2a2a2a;
+  border-bottom: 1px solid var(--border);
   font-size: 0.9rem;
 }
 
 th {
-  background-color: #222;
-  color: #aaa;
+  background-color: var(--surface-muted);
+  color: var(--text-muted);
   font-weight: 600;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border);
 }
 
 tr:hover td {
-  background-color: #202020;
+  background-color: var(--surface-muted);
 }
 
 input[type="text"],
@@ -870,9 +950,9 @@ select,
 textarea {
   padding: 8px 10px;
   border-radius: 6px;
-  border: 1px solid #3a3a3a;
-  background-color: #141414;
-  color: #fff;
+  border: 1px solid var(--border);
+  background-color: var(--surface-muted);
+  color: var(--text);
   font-size: 0.9rem;
   font-family: inherit;
   box-sizing: border-box;
@@ -882,7 +962,7 @@ select {
   cursor: pointer;
 }
 
-/* Responsive adjustments */
+/* Ultra native layout */
 @media (max-width: 900px) {
   .catalog-layout {
     flex-direction: column;

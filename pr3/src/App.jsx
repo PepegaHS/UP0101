@@ -36,7 +36,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Navigate to="/available-services" replace />} />
               <Route path="/available-services" element={<Services />} />
-              <Route path="/cart" element={<Cart />} />
+              <Route path="/cart" element={isAdmin ? <Navigate to="/available-services" replace /> : <Cart />} />
               <Route path="/categories" element={<CategoriesList />} />
               <Route path="/services" element={<ServicesList />} />
               <Route path="/discounts" element={<DiscountsList />} />

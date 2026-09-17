@@ -102,7 +102,6 @@ export default function CategoriesList() {
 				<table>
 					<thead>
 						<tr>
-							<th>ID</th>
 							<th>Название</th>
 							<th>Действия</th>
 						</tr>
@@ -110,7 +109,6 @@ export default function CategoriesList() {
 					<tbody>
 					{categories.map(category => (
 						<tr key={category.id_category}>
-							<td>{category.id_category}</td>
 							<td><strong>{category.title}</strong></td>
 							<td>
 								<button onClick={() => handleEdit(category)}>Редактировать</button>

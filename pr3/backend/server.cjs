@@ -30,19 +30,19 @@ pool.on('error', (err) => {
 
 // Test endpoints
 app.get('/api/test', (req, res) => {
-  res.json({ message: 'API is working!' });
+  res.json({ message: 'API работает!' });
 });
 
 app.get('/api/database', async (req, res) => {
   try {
     const result = await pool.query('SELECT NOW() as current_time');
     res.json({
-      message: 'Database connection successful!',
+      message: 'Подключение к базе данных успешно!',
       current_time: result.rows[0].current_time
     });
   } catch (err) {
     console.error('Error executing query', err);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Внутренняя ошибка сервера (500)' });
   }
 });
 
@@ -54,7 +54,7 @@ app.get('/api/roles', async (req, res) => {
     const result = await pool.query('SELECT * FROM roles ORDER BY id_role ASC');
     res.json(result.rows);
   } catch (err) {
-    console.error('Error getting roles:', err);
+    console.error('Ошибка получения ролей!', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -65,7 +65,7 @@ app.get('/api/roles/:id', async (req, res) => {
     if (result.rowCount === 0) return res.status(404).json({ error: 'Роль не найдена' });
     res.json(result.rows[0]);
   } catch (err) {
-    console.error('Error getting role by id:', err);
+    console.error('Ошибка получения роли!', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -79,7 +79,7 @@ app.post('/api/roles', async (req, res) => {
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
-    console.error('Error creating role:', err);
+    console.error('Ошибка создания роли!:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -91,10 +91,10 @@ app.put('/api/roles/:id', async (req, res) => {
       'UPDATE roles SET title = $1 WHERE id_role = $2 RETURNING *',
       [title, req.params.id]
     );
-    if (result.rowCount === 0) return res.status(404).json({ error: 'Роль не найдена' });
+    if (result.rowCount === 0) return res.status(404).json({ error: 'Роль не найдена (404)' });
     res.json(result.rows[0]);
   } catch (err) {
-    console.error('Error updating role:', err);
+    console.error('Ошибка обновления роли!:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -105,7 +105,7 @@ app.delete('/api/roles/:id', async (req, res) => {
     if (result.rowCount === 0) return res.status(404).json({ error: 'Роль не найдена' });
     res.status(204).end();
   } catch (err) {
-    console.error('Error deleting role:', err);
+    console.error('Ошибка удаления роли!:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -118,7 +118,7 @@ app.get('/api/discounts', async (req, res) => {
     const result = await pool.query('SELECT * FROM discounts ORDER BY id_discount ASC');
     res.json(result.rows);
   } catch (err) {
-    console.error('Error getting discounts:', err);
+    console.error('Ошибка получения скидок:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -129,7 +129,7 @@ app.get('/api/discounts/:id', async (req, res) => {
     if (result.rowCount === 0) return res.status(404).json({ error: 'Скидка не найдена' });
     res.json(result.rows[0]);
   } catch (err) {
-    console.error('Error getting discount by id:', err);
+    console.error('Ошибка получения скидки:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -143,7 +143,7 @@ app.post('/api/discounts', async (req, res) => {
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
-    console.error('Error creating discount:', err);
+    console.error('Ошибка создания скидки:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -158,7 +158,7 @@ app.put('/api/discounts/:id', async (req, res) => {
     if (result.rowCount === 0) return res.status(404).json({ error: 'Скидка не найдена' });
     res.json(result.rows[0]);
   } catch (err) {
-    console.error('Error updating discount:', err);
+    console.error('Ошибка обновления скидки:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -169,20 +169,20 @@ app.delete('/api/discounts/:id', async (req, res) => {
     if (result.rowCount === 0) return res.status(404).json({ error: 'Скидка не найдена' });
     res.status(204).end();
   } catch (err) {
-    console.error('Error deleting discount:', err);
+    console.error('Ошибка удаления скидки:', err);
     res.status(500).json({ error: err.message });
   }
 });
 
 // ==========================================
-// 3. USERS & AUTH (NO JWT, SESSION-BASED)
+// 3. USERS & AUTH 
 // ==========================================
 app.get('/api/users', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM users ORDER BY id_user ASC');
     res.json(result.rows);
   } catch (err) {
-    console.error('Error getting users:', err);
+    console.error('Ошибка получения пользователей:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -193,7 +193,7 @@ app.get('/api/users/:id', async (req, res) => {
     if (result.rowCount === 0) return res.status(404).json({ error: 'Пользователь не найден' });
     res.json(result.rows[0]);
   } catch (err) {
-    console.error('Error getting user by id:', err);
+    console.error('Ошибка получения пользователей:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -217,8 +217,14 @@ app.post('/api/users/login', async (req, res) => {
 
     res.json(result.rows[0]);
   } catch (err) {
-    console.error('Error logging in user:', err);
-    res.status(500).json({ error: 'Ошибка сервера при входе' });
+    if (err instanceof TypeError) {
+      console.error('Ошибка логина пользователя (TypeError):', err);
+      res.status(500).json({ error: 'Сервер временно недоступен' });
+    } 
+    else {
+      console.error('Ошибка логина пользователя:', err);
+      res.status(500).json({ error: 'Ошибка сервера при входе' });
+    }
   }
 });
 
@@ -232,7 +238,7 @@ app.post('/api/users', async (req, res) => {
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
-    console.error('Error creating user:', err);
+    console.error('Ошибка создания пользователя:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -261,7 +267,7 @@ app.delete('/api/users/:id', async (req, res) => {
     if (result.rowCount === 0) return res.status(404).json({ error: 'Пользователь не найден' });
     res.status(204).end();
   } catch (err) {
-    console.error('Error deleting user:', err);
+    console.error('Ошибка удаления пользователя:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -274,7 +280,7 @@ app.get('/api/categories', async (req, res) => {
     const result = await pool.query('SELECT * FROM categories ORDER BY id_category ASC');
     res.json(result.rows);
   } catch (err) {
-    console.error('Error getting categories:', err);
+    console.error('Ошибка получения категорий', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -644,7 +650,7 @@ app.get('/api/carts/:id', async (req, res) => {
   }
 });
 
-// User-specific Cart Endpoint: Get or Create Cart with full items details
+// User-specific Cart Endpoint
 app.get('/api/carts/user/:userId', async (req, res) => {
   const userId = req.params.userId;
   try {

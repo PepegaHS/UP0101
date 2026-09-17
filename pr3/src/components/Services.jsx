@@ -7,8 +7,10 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 
 export default function Services() {
+  const ITEMS_PER_PAGE = 20;
   const { user } = useAuth();
   const { addToCart, cart } = useCart();
+  const isAdmin = user && (user.role_id === 1 || user.role_title === 'Администратор');
 
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -19,6 +21,7 @@ export default function Services() {
   const [error, setError] = useState(null);
   const [addingId, setAddingId] = useState(null);
   const [addMessage, setAddMessage] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const loadData = async () => {
     try {
@@ -106,7 +109,6 @@ export default function Services() {
     setSelectedCategoryIds([]);
   };
 
-  // Filtered Services based on selected checkbox categories
   const filteredServices = useMemo(() => {
     if (selectedCategoryIds.length === 0) {
       return services;
@@ -122,6 +124,22 @@ export default function Services() {
       );
     });
   }, [services, serviceCategories, selectedCategoryIds]);
+
+  const totalPages = Math.ceil(filteredServices.length / ITEMS_PER_PAGE);
+  const paginatedServices = filteredServices.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategoryIds]);
+
+  useEffect(() => {
+    if (totalPages > 0 && currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   const handleAddToCart = async (service) => {
     setAddingId(service.id_service);
@@ -234,7 +252,7 @@ export default function Services() {
             </div>
           ) : (
             <div className="services-grid">
-              {filteredServices.map((service) => {
+              {paginatedServices.map((service) => {
                 const serviceDisc = getServiceDiscount(service);
                 const cats = getServiceCategories(service);
                 const { finalPrice, hasDiscount } = calculateFinalPrice(
@@ -242,7 +260,7 @@ export default function Services() {
                   serviceDisc,
                   userDiscount
                 );
-                const qtyInCart = getItemQuantityInCart(service.id_service);
+                const qtyInCart = isAdmin ? 0 : getItemQuantityInCart(service.id_service);
 
                 return (
                   <article className="service-card" key={service.id_service}>
@@ -297,22 +315,48 @@ export default function Services() {
                       </div>
                     </div>
 
-                    <div className="service-card__footer">
-                      <button
-                        className="btn-add-cart"
-                        onClick={() => handleAddToCart(service)}
-                        disabled={addingId === service.id_service}
-                      >
-                        {addingId === service.id_service ? 'Добавление...' : 'В корзину'}
-                      </button>
-                      {qtyInCart > 0 && (
-                        <span className="cart-qty-indicator">В корзине: {qtyInCart} шт.</span>
-                      )}
-                    </div>
+                    {!isAdmin && (
+                      <div className="service-card__footer">
+                        <button
+                          className="btn-add-cart"
+                          onClick={() => handleAddToCart(service)}
+                          disabled={addingId === service.id_service}
+                        >
+                          {addingId === service.id_service ? 'Добавление...' : 'В корзину'}
+                        </button>
+                        {qtyInCart > 0 && (
+                          <span className="cart-qty-indicator">В корзине: {qtyInCart} шт.</span>
+                        )}
+                      </div>
+                    )}
                   </article>
                 );
               })}
             </div>
+          )}
+
+          {totalPages > 1 && (
+            <nav className="pagination" aria-label="Пагинация каталога услуг">
+              <button
+                type="button"
+                className="pagination__button"
+                onClick={() => setCurrentPage((page) => page - 1)}
+                disabled={currentPage === 1}
+              >
+                Назад
+              </button>
+              <span className="pagination__status">
+                Страница {currentPage} из {totalPages}
+              </span>
+              <button
+                type="button"
+                className="pagination__button"
+                onClick={() => setCurrentPage((page) => page + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Далее
+              </button>
+            </nav>
           )}
         </main>
       </div>

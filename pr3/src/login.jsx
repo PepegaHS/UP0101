@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAuth } from './context/AuthContext';
 import { loginUser } from './api/users';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from './context/ThemeContext';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -12,6 +13,7 @@ function Login() {
 
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   const validateForm = () => {
     const errors = {};
@@ -47,7 +49,11 @@ function Login() {
       login(userData);
       navigate('/');
     } catch (err) {
-      setError(err.message || 'Неверный email или пароль');
+      setError(
+        err instanceof TypeError && err.message === 'Failed to fetch'
+          ? 'Не удалось подключиться к серверу.'
+          : err.message || 'Неверный email или пароль'
+      );
     } finally {
       setLoading(false);
     }
@@ -63,6 +69,9 @@ function Login() {
   return (
     <div className="login-container">
       <div className="login-card">
+        <button type="button" onClick={toggleTheme} className="login-theme-toggle">
+          {theme === 'light' ? 'Темная тема' : 'Светлая тема'}
+        </button>
         <h2>Вход в систему</h2>
 
         {error && <div className="alert-error">{error}</div>}
@@ -102,7 +111,7 @@ function Login() {
             {fieldErrors.password && <span className="field-error-text">{fieldErrors.password}</span>}
           </div>
 
-          <button type="submit" disabled={loading} style={{ width: '100%', marginTop: '10px' }}>
+              <button type="submit" className="login-submit" disabled={loading}>
             {loading ? 'Вход...' : 'Войти'}
           </button>
         </form>

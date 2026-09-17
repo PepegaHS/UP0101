@@ -38,6 +38,9 @@ export function CartProvider({ children }) {
 
   const addToCart = async (service, qty = 1) => {
     if (!user) return { success: false, error: 'Необходима авторизация' };
+    if (user.role_id === 1 || user.role_title === 'Администратор') {
+      return { success: false, error: 'Администраторы не могут совершать покупки' };
+    }
     try {
       setError(null);
       let activeCartId = cartInfo?.id_cart;

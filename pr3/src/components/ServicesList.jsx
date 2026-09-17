@@ -184,7 +184,6 @@ export default function ServicesList() {
 				<table>
 					<thead>
 						<tr>
-							<th>ID</th>
 							<th>Название</th>
 							<th>Цена</th>
 							<th>Длительность</th>
@@ -195,7 +194,6 @@ export default function ServicesList() {
 					<tbody>
 					{services.map(service => (
 						<tr key={service.id_service}>
-							<td>{service.id_service}</td>
 							<td><strong>{service.title}</strong></td>
 							<td>{parseFloat(service.price).toLocaleString()} ₽</td>
 							<td>{service.duration} мин.</td>

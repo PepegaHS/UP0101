@@ -212,7 +212,6 @@ export default function UsersList() {
 				<table>
 					<thead>
 						<tr>
-							<th>ID</th>
 							<th>ФИО</th>
 							<th>Роль</th>
 							<th>Email</th>
@@ -223,7 +222,6 @@ export default function UsersList() {
 					<tbody>
 					{users.map(user => (
 						<tr key={user.id_user}>
-							<td>{user.id_user}</td>
 							<td>{user.second_name} {user.first_name} {user.middle_name}</td>
 							<td>{getRoleTitle(user.role_id)}</td>
 							<td>{user.email}</td>

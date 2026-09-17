@@ -114,7 +114,6 @@ export default function DiscountsList() {
 				<table>
 					<thead>
 						<tr>
-							<th>ID</th>
 							<th>Название</th>
 							<th>Процент скидки</th>
 							<th>Действия</th>
@@ -123,7 +122,6 @@ export default function DiscountsList() {
 					<tbody>
 					{discounts.map(discount => (
 						<tr key={discount.id_discount}>
-							<td>{discount.id_discount}</td>
 							<td>{discount.title}</td>
 							<td>{discount.percentage}</td>
 							<td>

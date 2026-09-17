@@ -105,7 +105,6 @@ export default function CartsList() {
 				<table>
 					<thead>
 						<tr>
-							<th>ID Корзины</th>
 							<th>User ID</th>
 							<th>Действия</th>
 						</tr>
@@ -113,7 +112,6 @@ export default function CartsList() {
 					<tbody>
 					{carts.map(cart => (
 						<tr key={cart.id_cart}>
-							<td>{cart.id_cart}</td>
 							<td>{cart.user_id}</td>
 							<td>
 								<button onClick={() => handleEdit(cart)}>Редактировать</button>

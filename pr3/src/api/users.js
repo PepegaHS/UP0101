@@ -34,6 +34,7 @@ export async function updateUser(id, user) {
     body: JSON.stringify(user),
   });
   if (!response.ok) throw new Error('Ошибка при обновлении пользователя');
+  return await response.json();
 }
 
 // Удалить запись
@@ -42,6 +43,7 @@ export async function deleteUser(id) {
     method: 'DELETE',
   });
   if (!response.ok) throw new Error('Ошибка при удалении пользователя');
+  return await response.json();
 }
 
 // Логин пользователя

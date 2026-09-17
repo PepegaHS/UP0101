@@ -102,7 +102,6 @@ export default function RolesList() {
 				<table>
 					<thead>
 						<tr>
-							<th>ID</th>
 							<th>Название</th>
 							<th>Действия</th>
 						</tr>
@@ -110,7 +109,6 @@ export default function RolesList() {
 					<tbody>
 					{roles.map(role => (
 						<tr key={role.id_role}>
-							<td>{role.id_role}</td>
 							<td>{role.title}</td>
 							<td>
 								<button onClick={() => handleEdit(role)}>Редактировать</button>

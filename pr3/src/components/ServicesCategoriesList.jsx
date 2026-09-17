@@ -118,7 +118,6 @@ export default function ServicesCategoriesList() {
 				<table>
 					<thead>
 						<tr>
-							<th>ID</th>
 							<th>Service ID</th>
 							<th>Category ID</th>
 							<th>Действия</th>
@@ -127,7 +126,6 @@ export default function ServicesCategoriesList() {
 					<tbody>
 					{links.map(link => (
 						<tr key={`${link.service_id}-${link.category_id}`}>
-							<td>{link.service_id} / {link.category_id}</td>
 							<td>{link.service_id}</td>
 							<td>{link.category_id}</td>
 							<td>

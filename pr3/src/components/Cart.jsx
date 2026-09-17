@@ -9,11 +9,11 @@ export default function Cart() {
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  // User personal discount percentage
+  // Discount
   const userDiscountPercentage = user?.discount_percentage || 0;
   const userDiscountTitle = user?.discount_title || 'Персональный купон';
 
-  // Calculate totals
+  // Total
   const summary = cart.reduce(
     (acc, item) => {
       const qty = parseInt(item.quantity, 10) || 1;
@@ -44,7 +44,7 @@ export default function Cart() {
     if (cart.length === 0) return;
     setSubmitting(true);
     try {
-      // Clear cart items in DB
+      // Clear cart in db
       await clearCart();
       setCheckoutSuccess(true);
     } catch {

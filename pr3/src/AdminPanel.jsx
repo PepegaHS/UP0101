@@ -1,10 +1,10 @@
 import { NavLink } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
-import { useCart } from './context/CartContext';
+import { useTheme } from './context/ThemeContext';
 
 function AdminPanel() {
   const { logout, user } = useAuth();
-  const { totalCount } = useCart();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <nav className="admin-panel">
@@ -20,12 +20,6 @@ function AdminPanel() {
           className={({ isActive }) => (isActive ? 'nav-link active store-link' : 'nav-link store-link')}
         >
           Каталог услуг
-        </NavLink>
-        <NavLink
-          to="/cart"
-          className={({ isActive }) => (isActive ? 'nav-link active store-link' : 'nav-link store-link')}
-        >
-          Корзина {totalCount > 0 && <span className="nav-badge">{totalCount}</span>}
         </NavLink>
       </div>
 
@@ -68,6 +62,9 @@ function AdminPanel() {
 
       <div className="admin-panel__user">
         <span className="user-email-text">{user?.email}</span>
+        <button type="button" onClick={toggleTheme} className="theme-toggle">
+          {theme === 'light' ? 'Темная тема' : 'Светлая тема'}
+        </button>
         <button onClick={logout} className="admin-panel__logout">
           Выйти
         </button>

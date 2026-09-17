@@ -1,10 +1,12 @@
 import { NavLink } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import { useCart } from './context/CartContext';
+import { useTheme } from './context/ThemeContext';
 
 function Menu() {
   const { user, logout } = useAuth();
   const { totalCount } = useCart();
+  const { theme, toggleTheme } = useTheme();
 
   const isAdmin = user && (user.role_id === 1 || user.role_title === 'Администратор');
 
@@ -42,6 +44,9 @@ function Menu() {
       </nav>
 
       <div className="navbar-user">
+        <button type="button" onClick={toggleTheme} className="theme-toggle">
+          {theme === 'light' ? 'Темная тема' : 'Светлая тема'}
+        </button>
         <div className="user-details">
           <span className="user-name">
             {user?.first_name ? `${user.first_name} ${user.second_name || ''}` : user?.email}

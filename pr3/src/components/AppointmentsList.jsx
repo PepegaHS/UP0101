@@ -159,7 +159,6 @@ export default function AppointmentsList() {
         <table>
           <thead>
             <tr>
-              <th>ID записи</th>
               <th>Client ID</th>
               <th>Master ID</th>
               <th>Время</th>
@@ -170,7 +169,6 @@ export default function AppointmentsList() {
           <tbody>
           {appointments.map(a => (
             <tr key={a.id_appointment}>
-              <td>{a.id_appointment}</td>
               <td>{a.user_id}</td>
               <td>{a.master_id}</td>
               <td>{a.appointment_date}</td>

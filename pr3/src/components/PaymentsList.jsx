@@ -133,7 +133,6 @@ export default function PaymentsList() {
 				<table>
 					<thead>
 						<tr>
-							<th>ID</th>
 							<th>Appointment ID</th>
 							<th>Дата платежа</th>
 							<th>Сумма</th>
@@ -143,7 +142,6 @@ export default function PaymentsList() {
 					<tbody>
 					{payments.map(payment => (
 						<tr key={payment.id_payment}>
-							<td>{payment.id_payment}</td>
 							<td>{payment.appointment_id}</td>
 							<td>{payment.payment_date ? new Date(payment.payment_date).toLocaleDateString() : '-'}</td>
 							<td>{parseFloat(payment.total).toLocaleString()} ₽</td>
